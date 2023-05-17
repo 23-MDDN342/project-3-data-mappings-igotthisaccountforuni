@@ -48,23 +48,25 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
+    this.draw_mask(positions.chin);
     this.draw_segment(positions.chin);
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
-    this.draw_segment(positions.top_lip);
+    // this.draw_segment(positions.top_lip);
 
   }
 
   // example of a function *inside* the face object.
   // this draws a segment, and do_loop will connect the ends if true
-  this.draw_segment = function(segment, do_loop) {
+  this.draw_segment = function(segment) {
     for(let i=0; i<segment.length; i++) {
         let px = segment[i][0];
         let py = segment[i][1];
         push();
         translate(px, py);
         scale(0.01);
+
         stroke(255);
         strokeWeight(3);
         fill(255, 255, 255, 50);
@@ -75,7 +77,39 @@ function Face() {
         ellipse(0, 12, 20, 15);
         pop();
     }
-  };
+  }
+  this.draw_mask = function(segment) {
+    for(let i = 0; i < segment.length/2; i++){
+      let firstX = segment[i][0];
+      let firstY = segment[i][1];
+      
+      let lastX = segment[segment.length - i][0];
+      let lastY = segment[segment.length - i][1];
+
+      let gapX = lastX - firstX;
+      let gapY = lastY - firstY;
+      if(gapY < 0){
+        gapY = gapY * -1;
+      }
+
+      for(let placeX = firstX ; placeX < gapX ; placeX = placeX + gapX/5){
+        for(let placeY = firstY ; placeY < gapY ; placeY = placeY + gapY/5){
+          push();
+          translate(placeX, placeY);
+          scale(0.01);
+            stroke(255, 0, 0);
+            fill(255, 0, 0, 80);
+
+            ellipse(0, 0, 50, 50);
+            ellipse(-8, -6, 10, 10);
+            ellipse(8, -6, 10, 10);
+            ellipse(0, 12, 20, 15);
+          pop();
+        }
+      }
+
+    }
+  }
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
@@ -93,69 +127,3 @@ function Face() {
     return settings;
   }
 }
-
-  //   console.log()
-  //   // head
-  //   ellipseMode(CENTER);
-  //   stroke(stroke_color);
-  //   fill(this.mainColour);
-  //   ellipse(segment_average(positions.chin)[0], 0, 3, 4);
-  //   noStroke();
-
-
-  //   // mouth
-  //   fill(this.detailColour);
-  //   ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
-
-  //   // eyebrows
-  //   fill( this.eyebrowColour);
-  //   stroke( this.eyebrowColour);
-  //   strokeWeight(0.08);
-  //   this.draw_segment(positions.left_eyebrow);
-  //   this.draw_segment(positions.right_eyebrow);
-
-  //   // draw the chin segment using points
-  //   fill(this.chinColour);
-  //   stroke(this.chinColour);
-  //   this.draw_segment(positions.chin);
-
-  //   fill(100, 0, 100);
-  //   stroke(100, 0, 100);
-  //   this.draw_segment(positions.nose_bridge);
-  //   this.draw_segment(positions.nose_tip);
-
-  //   strokeWeight(0.03);
-
-  //   fill(this.lipColour);
-  //   stroke(this.lipColour);
-  //   this.draw_segment(positions.top_lip);
-  //   this.draw_segment(positions.bottom_lip);
-
-  //   let left_eye_pos = segment_average(positions.left_eye);
-  //   let right_eye_pos = segment_average(positions.right_eye);
-
-  //   // eyes
-  //   noStroke();
-  //   let curEyeShift = 0.04 * this.eye_shift;
-  //   if(this.num_eyes == 2) {
-  //     fill(this.detailColour);
-  //     ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.33);
-  //     ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.33);
-
-  //     // fill(this.mainColour);
-  //     // ellipse(left_eye_pos[0] + curEyeShift, left_eye_pos[1], 0.18);
-  //     // ellipse(right_eye_pos[0] + curEyeShift, right_eye_pos[1], 0.18);
-  //   }
-  //   else {
-  //     let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-  //     let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
-
-  //     fill(this.detailColour);
-  //     ellipse(eyePosX, eyePosY, 0.45, 0.27);
-
-  //     fill(this.mainColour);
-  //     ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-  //   }
-  //  // fill(0)
-  //  //ellipse(0,0, 0.5,0.5) center point
-  //  //rect(-2,-2,4.5,4) sizing debug 
