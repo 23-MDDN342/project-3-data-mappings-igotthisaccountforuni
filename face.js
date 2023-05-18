@@ -32,15 +32,7 @@ function segment_average(segment) {
 function Face() {
   // these are state variables for a face
   // (your variables should be different!)
-  this.detailColour = [204, 136, 17];
-  this.mainColour = [51, 119, 153];
-  this.num_eyes = 2;    // can be either 1 (cyclops) or 2 (two eyes)
-  this.eye_shift = -1;   // range is -10 to 10
-  this.mouth_size = 1;  // range is 0.5 to 8
 
-  this.chinColour = [153, 153, 51]
-  this.lipColour = [136, 68, 68]
-  this.eyebrowColour = [119, 85, 17]
 
   /*
    * Draw the face with position lists that include:
@@ -53,6 +45,8 @@ function Face() {
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
+    this.draw_segment(positions.right_eyebrow);
+    this.draw_segment(positions.left_eyebrow);
     // this.draw_segment(positions.top_lip);
 
   }
@@ -69,7 +63,7 @@ function Face() {
 
         stroke(255);
         strokeWeight(3);
-        fill(255, 255, 255, 50);
+        fill(255, 255, 255, 100);
 
         ellipse(0, 0, 50, 50);
         ellipse(-8, -6, 10, 10);
@@ -80,34 +74,50 @@ function Face() {
   }
   this.draw_mask = function(segment) {
     for(let i = 0; i < segment.length/2; i++){
+      
+      
       let firstX = segment[i][0];
       let firstY = segment[i][1];
-      
-      let lastX = segment[segment.length - i][0];
-      let lastY = segment[segment.length - i][1];
 
+      let indexLast = (segment.length-1) - i;
+      let lastX = segment[indexLast][0];
       let gapX = lastX - firstX;
-      let gapY = lastY - firstY;
-      if(gapY < 0){
-        gapY = gapY * -1;
+
+      
+      for(let placeX = firstX ; placeX < lastX ; placeX = placeX + gapX/10){
+        push();
+        translate(placeX + random(-0.05, 0.05), firstY + random(-0.05, 0.05));
+        scale(0.01);
+        rotate(random(0, 360));
+        noStroke();
+          let rColour = int(random(1,5));
+          let rTransparency = random(60, 220);
+          let highlights = [
+           [255, 154, 0, rTransparency],
+          [0, 255, 4, rTransparency],
+          [0, 197, 255, rTransparency],
+          [255, 0, 167, rTransparency]
+          ];
+
+          if(rColour == 1){
+            fill(highlights[0]);
+          }
+          if(rColour == 2){
+            fill(highlights[1]);
+          }
+          if(rColour == 3){
+            fill(highlights[2]);
+          }
+          if(rColour == 4){
+            fill(highlights[3]);
+          }
+
+          ellipse(0, 0, 50, 50);
+          ellipse(-8, -6, 10, 10);
+          ellipse(8, -6, 10, 10);
+          ellipse(0, 12, 20, 15);
+        pop();
       }
-
-      for(let placeX = firstX ; placeX < gapX ; placeX = placeX + gapX/5){
-        for(let placeY = firstY ; placeY < gapY ; placeY = placeY + gapY/5){
-          push();
-          translate(placeX, placeY);
-          scale(0.01);
-            stroke(255, 0, 0);
-            fill(255, 0, 0, 80);
-
-            ellipse(0, 0, 50, 50);
-            ellipse(-8, -6, 10, 10);
-            ellipse(8, -6, 10, 10);
-            ellipse(0, 12, 20, 15);
-          pop();
-        }
-      }
-
     }
   }
 
