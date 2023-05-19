@@ -45,9 +45,9 @@ function Face() {
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
-    this.draw_segment(positions.right_eyebrow);
-    this.draw_segment(positions.left_eyebrow);
     // this.draw_segment(positions.top_lip);
+    // this.draw_segment(positions.right_eyebrow);
+    // this.draw_segment(positions.left_eyebrow);
 
   }
 
@@ -60,6 +60,7 @@ function Face() {
         push();
         translate(px, py);
         scale(0.01);
+        rotate(random(0, 360));
 
         stroke(255);
         strokeWeight(3);
@@ -93,7 +94,7 @@ function Face() {
           let rColour = int(random(1,5));
           let rTransparency = random(60, 220);
           let highlights = [
-           [255, 154, 0, rTransparency],
+          [255, 154, 0, rTransparency],
           [0, 255, 4, rTransparency],
           [0, 197, 255, rTransparency],
           [255, 0, 167, rTransparency]
