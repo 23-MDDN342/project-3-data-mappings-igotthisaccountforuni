@@ -133,6 +133,10 @@ function Face() {
     ellipse(firstX + backPos, segment[1][1], maskSize/1.3, maskSize);
   }
 
+
+
+  
+
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
