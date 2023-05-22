@@ -40,12 +40,14 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
+    this.draw_back(positions.chin);
     this.draw_mask(positions.chin);
     this.draw_segment(positions.chin);
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
-    // this.draw_segment(positions.top_lip);
+
+
     // this.draw_segment(positions.right_eyebrow);
     // this.draw_segment(positions.left_eyebrow);
 
@@ -73,10 +75,8 @@ function Face() {
         pop();
     }
   }
-  this.draw_mask = function(segment) {
+  this.draw_mask = function(segment) {    
     for(let i = 0; i < segment.length/2; i++){
-      
-      
       let firstX = segment[i][0];
       let firstY = segment[i][1];
 
@@ -120,6 +120,17 @@ function Face() {
         pop();
       }
     }
+  }
+  this.draw_back = function(segment) {
+    let maskSize = 5;
+    let firstX = segment[0][0];
+    let lastX = segment[segment.length-1][0];
+
+    let gap = lastX - firstX
+    let backPos = gap/2;
+    fill(0);
+    stroke(255);
+    ellipse(firstX + backPos, segment[1][1], maskSize/1.3, maskSize);
   }
 
   /* set internal properties based on list numbers 0-100 */
