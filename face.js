@@ -7,7 +7,7 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 3;
+var NUM_SLIDERS = 2;
 
 // other variables can be in here too
 // here's some examples for colors used
@@ -32,7 +32,8 @@ function segment_average(segment) {
 function Face() {
   // these are state variables for a face
   // (your variables should be different!)
-
+  this.trait = 0;
+  this.skinColor = 0;
 
   /*
    * Draw the face with position lists that include:
@@ -46,10 +47,11 @@ function Face() {
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
-
-
-    // this.draw_segment(positions.right_eyebrow);
-    // this.draw_segment(positions.left_eyebrow);
+    if(this.trait == 0){
+      this.draw_segment(positions.right_eyebrow);
+      this.draw_segment(positions.left_eyebrow);
+    }
+    console.log(this.trait);
 
   }
 
@@ -122,7 +124,10 @@ function Face() {
     }
   }
   this.draw_back = function(segment) {
-    let maskSize = 5;
+    let maskSize = 4;
+    let from = color(237, 196, 179);
+    let to = color(119, 73, 54);
+
     let firstX = segment[0][0];
     let lastX = segment[segment.length-1][0];
 
@@ -130,26 +135,24 @@ function Face() {
     let backPos = gap/2;
     fill(0);
     stroke(255);
-    ellipse(firstX + backPos, segment[1][1], maskSize/1.3, maskSize);
+    ellipse(firstX + backPos, segment[1][1], maskSize/1.2, maskSize);
   }
 
 
 
-  
+
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
-    this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
-    this.eye_shift = map(settings[1], 0, 100, -2, 2);
-    this.mouth_size = map(settings[2], 0, 100, 0.5, 8);
+    this.skinColor = map(settings[0], 0, 100, 0, 100);
+    this.trait = map(settings[1], 0, 100, 0, 1);
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(3);
-    settings[0] = map(this.num_eyes, 1, 2, 0, 100);
-    settings[1] = map(this.eye_shift, -2, 2, 0, 100);
-    settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
+    let settings = new Array(2);
+    settings[0] = map(this.skinColor, 0, 100, 0, 100);
+    settings[1] = map(this.trait, 0, 1, 0, 100);
     return settings;
   }
 }
