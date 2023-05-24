@@ -13,7 +13,7 @@ var NUM_SLIDERS = 2;
 // here's some examples for colors used
 
 
-const stroke_color = [95, 52, 8];
+const faceSize = 35;
 
 // example of a global function
 // given a segment, this returns the average point [x, y]
@@ -41,9 +41,9 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    this.draw_back(positions.chin);
+    // this.draw_back(positions.chin, postitions.right_eyebrow, positions.left_eyebrow);
     this.draw_mask(positions.chin);
-    this.draw_segment(positions.chin);
+    this.draw_segment2(positions.chin);
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
@@ -68,15 +68,61 @@ function Face() {
 
         stroke(255);
         strokeWeight(3);
-        fill(255, 255, 255, 100);
+        fill(255, 255, 255, 200);
 
-        ellipse(0, 0, 50, 50);
-        ellipse(-8, -6, 10, 10);
-        ellipse(8, -6, 10, 10);
-        ellipse(0, 12, 20, 15);
+        this.faceDraw();
         pop();
     }
   }
+
+  this.draw_segment2 = function(segment) {
+    for(let i=0; i<segment.length; i++) {
+        let px = segment[i][0];
+        let py = segment[i][1];
+
+        push();
+        translate(px, py);
+        scale(0.01);
+        rotate(random(0, 360));
+
+        stroke(255);
+        strokeWeight(3);
+        fill(255, 255, 255, 200);
+
+        this.faceDraw();
+
+        pop();
+
+        if( i < segment.length - 1){
+          let nx = segment[i + 1][0];
+          let ny = segment[i + 1][1];
+          
+          let gx;
+          let gy;
+
+          if(nx > px){
+            gx = nx - px;
+          } else { gx = px - nx; }
+
+          if(ny > py){
+            gy = ny - py;
+          } else { gy = py - ny; }
+
+          push();
+          translate(px + gx/2 , py + gy/2 );
+          scale(0.01);
+          rotate(random(0, 360));
+
+          stroke(255);
+          strokeWeight(3);
+          fill(255, 255, 255, 200);
+
+          this.faceDraw();
+          pop();
+        }
+    }
+  }
+
   this.draw_mask = function(segment) {    
     for(let i = 0; i < segment.length/2; i++){
       let firstX = segment[i][0];
@@ -94,12 +140,11 @@ function Face() {
         rotate(random(0, 360));
         noStroke();
           let rColour = int(random(1,5));
-          let rTransparency = random(60, 220);
           let highlights = [
-          [255, 154, 0, rTransparency],
-          [0, 255, 4, rTransparency],
-          [0, 197, 255, rTransparency],
-          [255, 0, 167, rTransparency]
+          [255, 154, 0, 160],
+          [0, 255, 4, 160],
+          [0, 197, 255, 160],
+          [255, 0, 167, 160]
           ];
 
           if(rColour == 1){
@@ -115,36 +160,48 @@ function Face() {
             fill(highlights[3]);
           }
 
-          ellipse(0, 0, 50, 50);
-          ellipse(-8, -6, 10, 10);
-          ellipse(8, -6, 10, 10);
-          ellipse(0, 12, 20, 15);
+          ellipse(0, 0, faceSize *1.4, faceSize *1.4 );
+          ellipse(-6, -4, faceSize *1.4/5, faceSize *1.4/5);
+          ellipse(6, -4, faceSize *1.4/5, faceSize *1.4/5);
+          ellipse(0, 9, faceSize *1.4 * 0.4, faceSize * 1.4 * 0.33);
         pop();
       }
     }
   }
-  this.draw_back = function(segment) {
-    let maskSize = 4;
-    let from = color(237, 196, 179);
-    let to = color(119, 73, 54);
+  // this.draw_back = function(segment1, segment2, segment3) {
+  //   let maskSize = 5;
+  //   let from = color(237, 196, 179);
+  //   let to = color(119, 73, 54);
 
-    let firstX = segment[0][0];
-    let lastX = segment[segment.length-1][0];
+  //   let faceColour = lerpColor(from, to, this.skinColor);
 
-    let gap = lastX - firstX
-    let backPos = gap/2;
-    fill(0);
-    stroke(255);
-    ellipse(firstX + backPos, segment[1][1], maskSize/1.2, maskSize);
+  //   fill(faceColour);
+  //   noStroke();
+    
+  //   beginShape();
+  //   for(i = 0 ; i < segment1.length ; i++){
+  //     vertex(segment1[i][0], segment1[i][1]);
+  //   }
+  //   for(i = 0 ; i < segment2.length ; i++){
+  //     vertex(segment1[i][0], segment1[i][1]);
+  //   }
+  //   endShape(CLOSE);
+  // }
+
+  this.faceDraw = function() {
+    ellipse(0, 0, faceSize, faceSize);
+    noFill();
+    ellipse(-6, -4, faceSize/5, faceSize/5);
+    ellipse(6, -4, faceSize/5, faceSize/5);
+    ellipse(0, 9, faceSize * 0.4, faceSize * 0.33);
   }
-
 
 
 
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
-    this.skinColor = map(settings[0], 0, 100, 0, 100);
+    this.skinColor = map(settings[0], 0, 100, 0, 1);
     this.trait = map(settings[1], 0, 100, 0, 1);
   }
 
