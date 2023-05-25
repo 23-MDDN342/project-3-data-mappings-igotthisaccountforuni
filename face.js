@@ -41,7 +41,7 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    // this.draw_back(positions.chin, postitions.right_eyebrow, positions.left_eyebrow);
+    this.draw_back(positions.chin, postitions.right_eyebrow, positions.left_eyebrow);
     this.draw_mask(positions.chin);
     this.draw_segment2(positions.chin);
     this.draw_segment(positions.right_eye);
@@ -168,25 +168,27 @@ function Face() {
       }
     }
   }
-  // this.draw_back = function(segment1, segment2, segment3) {
-  //   let maskSize = 5;
-  //   let from = color(237, 196, 179);
-  //   let to = color(119, 73, 54);
+  this.draw_back = function(segment1, segment2, segment3) {
+    let from = color(237, 196, 179);
+    let to = color(119, 73, 54);
 
-  //   let faceColour = lerpColor(from, to, this.skinColor);
+    let faceColour = lerpColor(from, to, this.skinColor);
 
-  //   fill(faceColour);
-  //   noStroke();
+    fill(faceColour);
+    noStroke();
     
-  //   beginShape();
-  //   for(i = 0 ; i < segment1.length ; i++){
-  //     vertex(segment1[i][0], segment1[i][1]);
-  //   }
-  //   for(i = 0 ; i < segment2.length ; i++){
-  //     vertex(segment1[i][0], segment1[i][1]);
-  //   }
-  //   endShape(CLOSE);
-  // }
+    beginShape();
+    for(i = 0 ; i < segment1.length ; i++){
+      vertex(segment1[i][0], segment1[i][1]);
+    }
+    for(i = segment2.length-1 ; i > 0 ; i--){
+      vertex(segment2[i][0], segment2[i][1]);
+    }
+    for(i = segment3.length-1 ; i > 0 ; i--){
+      vertex(segment3[i][0], segment3[i][1]);
+    }
+    endShape(CLOSE);
+  }
 
   this.faceDraw = function() {
     ellipse(0, 0, faceSize, faceSize);
