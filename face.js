@@ -7,7 +7,7 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 2;
+var NUM_SLIDERS = 4;
 
 // other variables can be in here too
 // here's some examples for colors used
@@ -34,6 +34,8 @@ function Face() {
   // (your variables should be different!)
   this.trait = 0;
   this.skinColor = 0;
+  this.ageing = 0;
+  this.preMask = 0;
 
   /*
    * Draw the face with position lists that include:
@@ -41,7 +43,11 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    this.draw_back(positions.chin, postitions.right_eyebrow, positions.left_eyebrow);
+    let var1 = segment_average(positions.right_eyebrow);
+    let var2 = segment_average(positions.left_eyebrow);
+    if(this.preMask == 0){
+      this.draw_back(positions.chin, var1, var2);
+    }
     this.draw_mask(positions.chin);
     this.draw_segment2(positions.chin);
     this.draw_segment(positions.right_eye);
@@ -49,9 +55,10 @@ function Face() {
     this.draw_segment(positions.bottom_lip);
     if(this.trait == 0){
       this.draw_segment(positions.right_eyebrow);
+    } 
+    else {
       this.draw_segment(positions.left_eyebrow);
     }
-    console.log(this.trait);
 
   }
 
@@ -68,7 +75,7 @@ function Face() {
 
         stroke(255);
         strokeWeight(3);
-        fill(255, 255, 255, 200);
+        fill(255, 255, 255, 120);
 
         this.faceDraw();
         pop();
@@ -87,7 +94,7 @@ function Face() {
 
         stroke(255);
         strokeWeight(3);
-        fill(255, 255, 255, 200);
+        fill(255, 255, 255, 120);
 
         this.faceDraw();
 
@@ -115,7 +122,7 @@ function Face() {
 
           stroke(255);
           strokeWeight(3);
-          fill(255, 255, 255, 200);
+          fill(255, 255, 255, 120);
 
           this.faceDraw();
           pop();
@@ -133,7 +140,7 @@ function Face() {
       let gapX = lastX - firstX;
 
       
-      for(let placeX = firstX ; placeX < lastX ; placeX = placeX + gapX/10){
+      for(let placeX = firstX ; placeX < lastX ; placeX = placeX + gapX/this.ageing){
         push();
         translate(placeX + random(-0.05, 0.05), firstY + random(-0.05, 0.05));
         scale(0.01);
@@ -181,12 +188,12 @@ function Face() {
     for(i = 0 ; i < segment1.length ; i++){
       vertex(segment1[i][0], segment1[i][1]);
     }
-    for(i = segment2.length-1 ; i > 0 ; i--){
-      vertex(segment2[i][0], segment2[i][1]);
-    }
-    for(i = segment3.length-1 ; i > 0 ; i--){
-      vertex(segment3[i][0], segment3[i][1]);
-    }
+      if(this.trait == 0){
+        vertex(segment2[0], segment2[1]);
+      } 
+      else{
+        vertex(segment3[0], segment3[1]);
+      }
     endShape(CLOSE);
   }
 
@@ -198,13 +205,12 @@ function Face() {
     ellipse(0, 9, faceSize * 0.4, faceSize * 0.33);
   }
 
-
-
-
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     this.skinColor = map(settings[0], 0, 100, 0, 1);
     this.trait = map(settings[1], 0, 100, 0, 1);
+    this.ageing = map(settings[2], 0, 100, 0, 15);
+    this.preMask = map(settings[3], 0, 100, 0, 1);
   }
 
   /* get internal properties as list of numbers 0-100 */
@@ -212,6 +218,8 @@ function Face() {
     let settings = new Array(2);
     settings[0] = map(this.skinColor, 0, 100, 0, 100);
     settings[1] = map(this.trait, 0, 1, 0, 100);
+    settings[2] = map(this.ageing, 0, 15, 0, 100);
+    settings[3] = map(this.preMask, 0, 1, 0, 100);
     return settings;
   }
 }
