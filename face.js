@@ -52,7 +52,7 @@ function Face() {
     this.draw_segment(positions.right_eye);
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
-    if(this.trait == 0){
+    if(this.trait < 50){
       this.draw_segment(positions.right_eyebrow);
     } 
     else {
@@ -108,11 +108,11 @@ function Face() {
 
           if(nx > px){
             gx = nx - px;
-          } else { gx = px - nx; }
+          } else { gx = nx - px; }
 
           if(ny > py){
             gy = ny - py;
-          } else { gy = py - ny; }
+          } else { gy = ny - py; }
 
           push();
           translate(px + gx/2 , py + gy/2 );
@@ -121,7 +121,7 @@ function Face() {
 
           stroke(255);
           strokeWeight(3);
-          fill(255, 255, 255, 120);
+          fill(255, 255, 255, 130);
 
           this.faceDraw();
           pop();
@@ -131,7 +131,7 @@ function Face() {
 
   this.draw_mask = function(segment) {    
     for(let i = 0; i < segment.length/2; i++){
-      let firstX = segment[i][0];
+      let firstX = segment[i][0] + 0.1;
       let firstY = segment[i][1];
 
       let indexLast = (segment.length-1) - i;
@@ -187,7 +187,7 @@ function Face() {
     for(i = 0 ; i < segment1.length ; i++){
       vertex(segment1[i][0], segment1[i][1]);
     }
-      if(this.trait == 0){
+      if(this.trait < 50){
         vertex(segment2[0], segment2[1]);
       } 
       else{
@@ -207,18 +207,18 @@ function Face() {
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     this.skinColor = map(settings[0], 0, 100, 0, 1);
-    this.trait = map(settings[1], 0, 100, 0, 1);
+    this.trait = map(settings[1], 0, 100, 0, 100);
     this.decor = map(settings[2], 0, 100, 0, 15);
-    this.ageing = map(settings[3], 0, 100, 100, 190);
+    this.ageing = map(settings[3], 0, 100, 190, 100);
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
     let settings = new Array(2);
     settings[0] = map(this.skinColor, 0, 100, 0, 100);
-    settings[1] = map(this.trait, 0, 1, 0, 100);
+    settings[1] = map(this.trait, 0, 100, 0, 100);
     settings[2] = map(this.decor, 0, 15, 0, 100);
-    settings[3] = map(this.ageing, 100, 190, 0, 100);
+    settings[3] = map(this.ageing, 190, 100, 0, 100);
     return settings;
   }
 }
