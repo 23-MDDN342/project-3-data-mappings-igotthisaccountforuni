@@ -187,12 +187,9 @@ function Face() {
     for(i = 0 ; i < segment1.length ; i++){
       vertex(segment1[i][0], segment1[i][1]);
     }
-      if(this.trait < 50){
-        vertex(segment2[0], segment2[1]);
-      } 
-      else{
-        vertex(segment3[0], segment3[1]);
-      }
+    curveVertex(segment2[0], segment2[1]);
+    curveVertex(segment3[0], segment3[1]);
+      
     endShape(CLOSE);
   }
 
@@ -209,7 +206,7 @@ function Face() {
     this.skinColor = map(settings[0], 0, 100, 0, 1);
     this.trait = map(settings[1], 0, 100, 0, 100);
     this.decor = map(settings[2], 0, 100, 0, 15);
-    this.ageing = map(settings[3], 0, 100, 190, 100);
+    this.ageing = map(settings[3], 0, 70, 190, 100);
   }
 
   /* get internal properties as list of numbers 0-100 */
@@ -218,7 +215,7 @@ function Face() {
     settings[0] = map(this.skinColor, 0, 100, 0, 100);
     settings[1] = map(this.trait, 0, 100, 0, 100);
     settings[2] = map(this.decor, 0, 15, 0, 100);
-    settings[3] = map(this.ageing, 190, 100, 0, 100);
+    settings[3] = map(this.ageing, 190, 70, 0, 100);
     return settings;
   }
 }
