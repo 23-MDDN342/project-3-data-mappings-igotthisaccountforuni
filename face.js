@@ -28,20 +28,16 @@ function segment_average(segment) {
   return [sum_x / s_len , sum_y / s_len ];
 }
 
-// This where you define your own face object
+/* Draw the face with position lists that include:
+ *    chin, right_eye, left_eye, right_eyebrow, left_eyebrow
+ *    bottom_lip, top_lip, nose_tip, nose_bridge */
+   
 function Face() {
-  // these are state variables for a face
-  // (your variables should be different!)
   this.trait = 0;
   this.skinColor = 0;
   this.decor = 0;
   this.ageing = 0;
 
-  /*
-   * Draw the face with position lists that include:
-   *    chin, right_eye, left_eye, right_eyebrow, left_eyebrow
-   *    bottom_lip, top_lip, nose_tip, nose_bridge, 
-   */  
   this.draw = function(positions) {
     let var1 = segment_average(positions.right_eyebrow);
     let var2 = segment_average(positions.left_eyebrow);
@@ -61,8 +57,6 @@ function Face() {
 
   }
 
-  // example of a function *inside* the face object.
-  // this draws a segment, and do_loop will connect the ends if true
   this.draw_segment = function(segment) {
     for(let i=0; i<segment.length; i++) {
         let px = segment[i][0];
