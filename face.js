@@ -4,7 +4,7 @@
  */  
 
 // remove this or set to false to enable full program (load will be slower)
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 
 // this can be used to set the number of sliders to show
 var NUM_SLIDERS = 4;
@@ -49,10 +49,10 @@ function Face() {
     this.draw_segment(positions.left_eye);
     this.draw_segment(positions.bottom_lip);
     if(this.trait < 50){
-      this.draw_segment(positions.right_eyebrow);
+      this.draw_segment(positions.left_eyebrow);
     } 
     else {
-      this.draw_segment(positions.left_eyebrow);
+      this.draw_segment(positions.right_eyebrow);
     }
 
   }
